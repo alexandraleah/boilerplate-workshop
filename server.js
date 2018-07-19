@@ -3,6 +3,8 @@ const app = express();
 
 const path = require('path');
 
+const session = require('express-session');
+
 const morgan = require('morgan');
 app.use(morgan('dev'));
 
@@ -11,6 +13,14 @@ app.use(express.static(path.join(__dirname, './public')));
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'a wildly insecure secret',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.use('/api', require('./server/api'));
 
